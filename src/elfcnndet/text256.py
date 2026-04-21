@@ -29,16 +29,20 @@ def extract_text256(path: Path, size: int = DEFAULT_SIZE) -> np.ndarray:
         ValueError: File is not a valid ELF or has no `.text` section.
         FileNotFoundError: File does not exist.
     """
+    # `ELFFile.__init__` catches the most obvious "not an ELF" cases, but
+    # `get_section_by_name` parses the section header string table lazily
+    # and can raise `ELFParseError` on corrupt / truncated binaries. Catch
+    # the whole ELFError hierarchy so a single malformed sample in a large
+    # dataset can't crash the feature pass.
     with open(path, "rb") as f:
         try:
             elf = ELFFile(f)
+            text = elf.get_section_by_name(".text")
+            if text is None:
+                raise ValueError(f"{path.name}: no .text section")
+            data = text.data()[:size]
         except ELFError as exc:
-            raise ValueError(f"{path.name}: not a valid ELF ({exc})") from exc
-
-        text = elf.get_section_by_name(".text")
-        if text is None:
-            raise ValueError(f"{path.name}: no .text section")
-        data = text.data()[:size]
+            raise ValueError(f"{path.name}: ELF parse error ({exc})") from exc
 
     vec = np.zeros(size, dtype=np.uint8)
     vec[: len(data)] = np.frombuffer(data, dtype=np.uint8)
