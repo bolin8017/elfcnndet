@@ -1,6 +1,6 @@
 [project]
 name = "elfcnndet"
-version = "0.1.1"
+version = "0.2.0"
 description = "1D-CNN ELF malware detector with multi-GPU DataParallel — template for lolday"
 readme = "README.md"
 license = { text = "MIT" }

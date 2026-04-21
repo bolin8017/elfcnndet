@@ -34,5 +34,5 @@ def test_zero_pads_short_sections() -> None:
 def test_raises_on_non_elf(tmp_path: Path) -> None:
     p = tmp_path / "notelf"
     p.write_bytes(b"hello")
-    with pytest.raises(ValueError, match="not a valid ELF"):
+    with pytest.raises(ValueError, match="ELF parse error"):
         extract_text256(p)
