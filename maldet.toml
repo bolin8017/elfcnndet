@@ -1,8 +1,8 @@
 [detector]
 name = "elfcnndet"
-version = "0.1.0"
+version = "2.0.0"
 framework = "lightning"
-description = "elfcnndet (PyTorch Lightning CNN) — scaffolded by maldet scaffold"
+description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 1.0 framework"
 
 [input]
 binary_format = "elf"

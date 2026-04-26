@@ -4,12 +4,49 @@ build-backend = "hatchling.build"
 
 [project]
 name = "elfcnndet"
-version = "0.1.0"
+version = "2.0.0"
+description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 1.0 framework"
+readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.12"
+authors = [{ name = "bolin8017" }]
+keywords = ["malware", "detection", "elf", "pytorch", "lightning", "deep-learning", "gpu", "maldet"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
-    "maldet[lightning]>=1.0",
+    "maldet[lightning]>=1.0,<2.0",
     "pyelftools>=0.31",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=4.1", "ruff>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/bolin8017/elfcnndet"
+Repository = "https://github.com/bolin8017/elfcnndet.git"
+Issues = "https://github.com/bolin8017/elfcnndet/issues"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/elfcnndet"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
