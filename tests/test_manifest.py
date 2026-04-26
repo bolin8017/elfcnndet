@@ -6,7 +6,6 @@ from pathlib import Path
 
 from maldet.manifest import load_manifest
 
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 

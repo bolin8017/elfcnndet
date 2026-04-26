@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 from elftools.elf.elffile import ELFFile
-
 from maldet.types import Sample
 
 

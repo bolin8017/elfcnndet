@@ -6,9 +6,9 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from maldet.types import Sample
 
 from elfcnndet.features import Text256Extractor
-from maldet.types import Sample
 
 
 def _system_elf() -> Path:
