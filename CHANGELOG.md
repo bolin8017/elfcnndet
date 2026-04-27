@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.5] - 2026-04-27
+
+### Fixed
+
+- Pins `maldet[lightning]>=1.0.5` so the LightningTrainer falls back to
+  `tempfile.gettempdir()` for checkpoint root when no explicit
+  `default_root_dir` is supplied, fixing the v2.0.4 train crash at
+  `save_checkpoint` (`OSError [Errno 30] Read-only file system:
+  '/app/checkpoints'`) under lolday's `readOnlyRootFilesystem` pod
+  security context.
+
 ## [2.0.4] - 2026-04-27
 
 ### Fixed
