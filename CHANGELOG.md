@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.7] - 2026-04-27
+
+### Fixed
+
+- Pulls `maldet[lightning,mlflow]` (was just `lightning`) so the `mlflow`
+  package is in the detector image. Without it, `MlflowEventLogger`
+  silently no-ops in `log_metric` / `log_artifact`, so platform metrics
+  never reach the MLflow tracking server and `runs:/<run_id>/model` is
+  empty — exactly what blocked Phase 11d evaluate/predict.
+
 ## [2.0.6] - 2026-04-27
 
 ### Fixed
