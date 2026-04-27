@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.8] - 2026-04-27
+
+### Fixed
+
+- Pins `maldet[lightning,mlflow]>=1.0.7` so evaluate/predict skip
+  samples whose extractor raises `ValueError`. Train had this since
+  1.0.1; evaluate/predict were missing the same try/except.
+
 ## [2.0.7] - 2026-04-27
 
 ### Fixed
