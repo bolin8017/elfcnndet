@@ -33,3 +33,15 @@ def test_manifest_stages_reference_local_extractor_and_lightning_trainer() -> No
     assert train.extractor == "elfcnndet.features:Text256Extractor"
     assert train.model == "elfcnndet.models:make_cnn"
     assert train.trainer == "maldet.trainers.lightning_trainer:LightningTrainer"
+
+
+def test_manifest_io_contract() -> None:
+    """[input] / [output] / [compat] fields the operator + trainer depend on.
+
+    classes order matters for binary metrics — flipping it would silently
+    invert AUC/precision."""
+    m = load_manifest(REPO_ROOT / "maldet.toml")
+    assert m.input.binary_format == "elf"
+    assert m.input.required_sections == [".text"]
+    assert m.output.classes == ["Malware", "Benign"]
+    assert m.compat.min_maldet == "1.0"
