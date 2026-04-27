@@ -17,6 +17,11 @@ class Text256Extractor:
 
     def extract(self, sample: Sample) -> np.ndarray:
         with open(sample.path, "rb") as f:
+            # pyelftools parses lazily — header, section table, and .data() can each
+            # raise heterogeneous exceptions (ELFError, KeyError, generic Exception,
+            # even OSError/zlib.error for compressed sections). Translate to ValueError
+            # so the maldet pipeline treats every malformed input as a sample-level
+            # scan-error rather than crashing the worker.
             try:
                 elf = ELFFile(f)
                 section = elf.get_section_by_name(".text")

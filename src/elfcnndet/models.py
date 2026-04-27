@@ -1,4 +1,11 @@
-"""CNN model factory."""
+"""ByteCNN — 1D-CNN over the first 256 bytes of an ELF .text section.
+
+Byte values 0..255 are embedding indices (Embedding(256, 32)); the time axis is
+fixed at 256 from Text256Extractor. Two output logits are ordered
+(Malware, Benign) to match maldet.toml [output].classes.
+
+Factory entrypoint: ``make_cnn`` — referenced from maldet.toml stages.train.model.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +15,20 @@ from torch import nn
 
 
 class ByteCNN(pl.LightningModule):
+    """1D-CNN classifier over byte-indexed ELF .text features.
+
+    Inputs: ``long`` tensor of shape ``(N, 256)`` with values in ``[0, 255]``
+    (typically up-cast from Text256Extractor's ``uint8`` output by
+    LightningTrainer at materialize time).
+
+    Outputs: raw logits of shape ``(N, 2)`` — softmax/argmax is the caller's
+    job. Loss is ``CrossEntropyLoss`` with class index 0 = Malware, 1 = Benign
+    (matches ``maldet.toml [output].classes`` order).
+
+    Defaults: Adam optimizer at lr=1e-3, no scheduler. Override via constructor
+    kwargs (``embedding_dim``/``conv1_out``/``conv2_out``).
+    """
+
     def __init__(self, embedding_dim: int = 32, conv1_out: int = 64, conv2_out: int = 128) -> None:
         super().__init__()
         self.embed = nn.Embedding(num_embeddings=256, embedding_dim=embedding_dim)

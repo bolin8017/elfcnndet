@@ -40,7 +40,7 @@ input bytes (N, 256) uint8
 
 1. Register: `POST /api/v1/detectors { git_url: "https://github.com/bolin8017/elfcnndet.git" }`.
 2. Build a tag: `POST /api/v1/detectors/{id}/builds { git_tag: "v2.0.0" }`.
-3. Submit a job: `POST /api/v1/jobs { type: "train", resource_profile: "gpu2", ... }`. Phase 11b's `validate_job_submission` permits the multi-GPU profile because `manifest.lifecycle.supports_distributed = "ddp"`.
+3. Submit a job: `POST /api/v1/jobs { type: "train", resource_profile: "gpu2", ... }`. lolday's job validator permits the multi-GPU profile because `manifest.lifecycle.supports_distributed = "ddp"`.
 
 ## Migrating from v0.2.x
 
