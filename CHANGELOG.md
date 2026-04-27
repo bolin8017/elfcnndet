@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.1.0] - 2026-04-27
+
+### Added
+
+- `ByteCNN.predict` and `ByteCNN.predict_proba` so the maldet
+  evaluator/predictor (which call the sklearn `.predict`/`.predict_proba`
+  API directly) can use a Lightning module without a wrapper. Without
+  these, evaluate/predict crashed with
+  `AttributeError: 'ByteCNN' object has no attribute 'predict'`.
+
 ## [2.0.9] - 2026-04-27
 
 ### Fixed

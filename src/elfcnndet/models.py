@@ -57,6 +57,29 @@ class ByteCNN(pl.LightningModule):
     def configure_optimizers(self):  # type: ignore[no-untyped-def]
         return torch.optim.Adam(self.parameters(), lr=1e-3)
 
+    def predict(self, x):  # type: ignore[no-untyped-def]
+        """Sklearn-compatible argmax prediction over ``forward()``.
+
+        ``maldet.evaluators.binary.BinaryClassification`` and
+        ``maldet.builtins.predictors.BatchPredictor`` call ``model.predict``
+        / ``model.predict_proba`` directly; Lightning modules don't expose
+        those by default, so adapt them here.
+        """
+        self.eval()
+        with torch.no_grad():
+            x_t = torch.as_tensor(x, dtype=torch.long, device=self.device)
+            logits = self.forward(x_t)
+        return logits.argmax(dim=1).cpu().numpy()
+
+    def predict_proba(self, x):  # type: ignore[no-untyped-def]
+        """Softmax probabilities, classes ordered (Malware, Benign)."""
+        self.eval()
+        with torch.no_grad():
+            x_t = torch.as_tensor(x, dtype=torch.long, device=self.device)
+            logits = self.forward(x_t)
+            probs = torch.softmax(logits, dim=1)
+        return probs.cpu().numpy()
+
 
 def make_cnn(**kwargs) -> ByteCNN:  # type: ignore[no-untyped-def]
     return ByteCNN(**kwargs)
