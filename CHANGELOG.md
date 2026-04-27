@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.2] - 2026-04-27
+
+### Fixed
+
+- Pulls maldet >=1.0.3 transitively. v1.0.3 changes `StageRunner` to load the
+  model class from the manifest's `[stages.train].model` symbol instead of
+  Hydra-instantiating from `cfg.model._target_`. Unblocks lolday Phase 11d
+  E2E, where the params guard forbids `_target_` overrides, leaving the
+  v2.0.0/v2.0.1 train path crashing with `ConfigAttributeError: Missing key
+  model`. No source changes here — bump exists to retrigger the lolday build
+  pipeline against the patched framework.
+
 ## [2.0.1] - 2026-04-27
 
 ### Fixed
