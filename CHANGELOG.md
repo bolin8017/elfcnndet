@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.3] - 2026-04-27
+
+### Fixed
+
+- Pins `maldet[lightning]>=1.0.3,<2.0` (was `>=1.0,<2.0`) so pip cannot
+  resolve to an older version. The v2.0.2 build hit a PyPI/CDN propagation
+  race and pulled maldet 1.0.2 instead of 1.0.3, which kept the runner on
+  the old Hydra-instantiate path and reproduced the "Missing key model"
+  failure.
+
 ## [2.0.2] - 2026-04-27
 
 ### Fixed
