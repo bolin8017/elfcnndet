@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.4] - 2026-04-27
+
+### Fixed
+
+- Pins `maldet[lightning]>=1.0.4,<2.0` so pip resolves a torch wheel
+  compatible with the lab's NVIDIA driver (560.35.03 / CUDA 12.6). The
+  lightning extra in maldet 1.0.4 caps `torch<2.7`; without that ceiling,
+  pip pulled torch 2.11 (CUDA 12.8) which crashed at `_cuda_init` with
+  "NVIDIA driver too old (found version 12060)".
+
 ## [2.0.3] - 2026-04-27
 
 ### Fixed
