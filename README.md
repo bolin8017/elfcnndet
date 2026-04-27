@@ -1,23 +1,21 @@
 # elfcnndet
 
-Small 1D-CNN malware detector for Linux ELF binaries. Feature = first 256
-bytes of the `.text` section, fed through a byte-embedding + conv stack.
+1D-CNN malware detector for Linux ELF binaries with PyTorch Lightning. Feature = first 256 bytes of the `.text` section, fed through a byte-embedding + conv stack. Multi-GPU training via Lightning **DDP** (replaces the v0 `nn.DataParallel` pattern). Reference template for the [lolday](https://github.com/louiskyee/lolday) platform on the [maldet 1.0](https://github.com/bolin8017/maldet) framework.
 
-Designed as a **multi-GPU template** for the
-[lolday](https://github.com/louiskyee/lolday) platform — detects
-`torch.cuda.device_count()` at runtime and wraps the model in
-`nn.DataParallel` when 2 GPUs are allocated.
-
-Inherits [islab-malware-detector](https://github.com/bolin8017/islab-malware-detector)
-`BaseDetector`.
-
-## Usage
+## Install
 
 ```bash
-elfcnndet init --output config.json
-elfcnndet train    --config config.json
-elfcnndet evaluate --config config.json
-elfcnndet predict  --config config.json
+pip install -e .[dev]
+maldet check
+maldet describe
+```
+
+## CLI
+
+```bash
+maldet run train    --config config.yaml
+maldet run evaluate --config config.yaml
+maldet run predict  --config config.yaml
 ```
 
 ## Architecture
@@ -32,33 +30,21 @@ input bytes (N, 256) uint8
     ↓ CrossEntropyLoss
 ```
 
-## GPU scheduling behaviour
+`ByteCNN(LightningModule)` in `src/elfcnndet/models.py`.
 
-```python
-device_count = torch.cuda.device_count()
-if device_count >= 2:
-    model = nn.DataParallel(model)  # splits each batch across both GPUs
-```
+## Distributed training (DDP)
 
-MLflow run tags include `gpu_device_count` so the lolday UI / MLflow UI
-surfaces whether a given run actually used both cards.
+`maldet.toml` declares `lifecycle.supports_distributed = "ddp"`. When lolday's backend submits a `gpu2` resource profile, `maldet.trainers.lightning_trainer` reads `MALDET_GPU_COUNT=2` + `MALDET_DISTRIBUTED_STRATEGY=ddp` from the env and configures `Trainer(strategy="ddp", devices=2)`. No more hand-rolled `nn.DataParallel`.
 
-On lolday, pass `resource_profile="gpu2"` when submitting the job:
+## On lolday
 
-```json
-POST /api/v1/jobs
-{
-  "type": "train",
-  "detector_version_id": "...",
-  "train_dataset_id": "...",
-  "resource_profile": "gpu2"
-}
-```
+1. Register: `POST /api/v1/detectors { git_url: "https://github.com/bolin8017/elfcnndet.git" }`.
+2. Build a tag: `POST /api/v1/detectors/{id}/builds { git_tag: "v2.0.0" }`.
+3. Submit a job: `POST /api/v1/jobs { type: "train", resource_profile: "gpu2", ... }`. lolday's job validator permits the multi-GPU profile because `manifest.lifecycle.supports_distributed = "ddp"`.
 
-## Dataset format
+## Migrating from v0.2.x
 
-Same as upxelfdet / elfrfdet: CSV with `file_name,label[,family]`,
-samples at `<dataset_root>/<sha[:2]>/<sha>`.
+v2 is a full rewrite. v0 `BaseDetector`, `ElfCnnDetectorConfig`, per-detector CLI, and runtime `nn.DataParallel` wrapping are all removed. Use `maldet run <stage>` and let Lightning's `strategy="ddp"` handle multi-GPU.
 
 ## License
 

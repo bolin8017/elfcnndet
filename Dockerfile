@@ -1,14 +1,20 @@
-FROM harbor.lolday.svc:80/lolday/pytorch-cu12-base:2.7.0-cu126
-
-# Base ships Python 3.12 + torch 2.7.0 cu126 + numpy/pandas/sklearn/
-# pyelftools/structlog/typer + islab-malware-detector. Only the
-# detector's own package needs to land on top.
-USER root
+FROM python:3.12-slim
 WORKDIR /app
-COPY pyproject.toml README.md ./
-COPY src/ src/
-RUN pip install --no-cache-dir --no-deps . \
-    && rm -rf /root/.cache/pip
+COPY pyproject.toml maldet.toml ./
+COPY src/ ./src/
+RUN pip install --no-cache-dir .
 
-USER 1000
-ENTRYPOINT ["elfcnndet"]
+ARG MALDET_NAME
+ARG MALDET_VERSION
+ARG MALDET_FRAMEWORK
+ARG MALDET_MANIFEST_B64
+ARG GIT_COMMIT
+
+LABEL org.opencontainers.image.title="${MALDET_NAME}"
+LABEL org.opencontainers.image.version="${MALDET_VERSION}"
+LABEL org.opencontainers.image.revision="${GIT_COMMIT}"
+LABEL io.maldet.manifest.schema="1"
+LABEL io.maldet.manifest="${MALDET_MANIFEST_B64}"
+LABEL io.maldet.framework="${MALDET_FRAMEWORK}"
+
+ENTRYPOINT ["maldet"]

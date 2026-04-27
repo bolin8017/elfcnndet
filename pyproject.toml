@@ -1,14 +1,18 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
 [project]
 name = "elfcnndet"
-version = "0.2.1"
-description = "1D-CNN ELF malware detector with multi-GPU DataParallel — template for lolday"
+version = "2.0.0"
+description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 1.0 framework"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.12"
 authors = [{ name = "bolin8017" }]
-keywords = ["malware", "detection", "elf", "pytorch", "deep-learning", "gpu"]
+keywords = ["malware", "detection", "elf", "pytorch", "lightning", "deep-learning", "gpu", "maldet"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
@@ -19,38 +23,30 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "islab-malware-detector[mlflow]>=0.5.0",
-    "numpy>=1.24.0",
-    "pandas>=2.0.0",
-    "scikit-learn>=1.3.0",
-    "torch>=2.2.0",
-    "pyelftools>=0.30",
-    "structlog>=24.0.0",
-    "typer>=0.9.0",
+    "maldet[lightning]>=1.0,<2.0",
+    "pyelftools>=0.31",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0", "ruff>=0.1.0"]
-
-[project.scripts]
-elfcnndet = "elfcnndet.cli:app"
+dev = ["pytest>=8.0", "pytest-cov>=4.1", "ruff>=0.6"]
 
 [project.urls]
 Homepage = "https://github.com/bolin8017/elfcnndet"
 Repository = "https://github.com/bolin8017/elfcnndet.git"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+Issues = "https://github.com/bolin8017/elfcnndet/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/elfcnndet"]
 
 [tool.ruff]
+line-length = 100
 target-version = "py312"
-line-length = 88
 src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+addopts = "-ra --strict-markers"
