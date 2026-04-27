@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.9] - 2026-04-27
+
+### Fixed
+
+- Pins `maldet[lightning,mlflow]>=1.0.8` so the runner threads
+  `model_factory` (the manifest's `[stages.train].model` symbol) into
+  `LightningTrainer.load`, fixing evaluate/predict's "requires
+  model_factory to rebuild the module" crash.
+
 ## [2.0.8] - 2026-04-27
 
 ### Fixed
