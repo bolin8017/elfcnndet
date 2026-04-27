@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.1] - 2026-04-27
+
+### Fixed
+
+- Pulls maldet >=1.0.2 transitively, which now skips per-sample feature-extractor
+  ValueErrors (e.g. ELF samples lacking `.text` for `Text256Extractor`) instead of
+  aborting the whole train run on the first bad sample. No source changes here —
+  bump exists to retrigger the lolday build pipeline against the patched framework.
+
 ## [2.0.0] - 2026-04-26
 
 ### Breaking
