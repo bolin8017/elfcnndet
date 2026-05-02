@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def test_manifest_loads_via_maldet() -> None:
     m = load_manifest(REPO_ROOT / "maldet.toml")
     assert m.detector.name == "elfcnndet"
-    assert m.detector.version == "3.0.0"
+    assert m.detector.version == "4.0.0"
     assert m.detector.framework == "lightning"
 
 
@@ -39,13 +39,16 @@ def test_manifest_stages_reference_local_extractor_and_lightning_trainer() -> No
 def test_manifest_io_contract() -> None:
     """[input] / [output] / [compat] fields the operator + trainer depend on.
 
-    classes order matters for binary metrics — flipping it would silently
-    invert AUC/precision."""
+    Under maldet 2.0, ``classes`` is alphabetical and ``positive_class`` is
+    explicit — together they pin the binary CM orientation in the platform
+    UI, so flipping either one would silently invert metrics."""
     m = load_manifest(REPO_ROOT / "maldet.toml")
     assert m.input.binary_format == "elf"
     assert m.input.required_sections == [".text"]
-    assert m.output.classes == ["Malware", "Benign"]
-    assert m.compat.min_maldet == "1.0"
+    assert m.output.classes == ["Benign", "Malware"]
+    assert m.output.positive_class == "Malware"
+    assert m.compat.min_maldet == "2.0"
+    assert m.compat.schema_version == 2
 
 
 def test_manifest_has_config_class_per_stage() -> None:
