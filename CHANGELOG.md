@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0.0] - 2026-05-02
+
+### BREAKING
+
+- Bumped maldet pin to `>=2.0,<3.0` (maldet 2.0 makes `positive_class` mandatory and reorders the binary CM to a fixed `[Benign, Malware]` axis).
+- `maldet.toml [output]`: `classes` is now alphabetical `["Benign", "Malware"]` and a new required `positive_class = "Malware"` field declares which label the detector treats as the positive class. Confusion-matrix orientation in lolday's evaluate / predict views derives from these two fields together.
+- `maldet.toml [compat]`: `schema_version = 2`, `min_maldet = "2.0"`. Detectors built with maldet < 2.0 are rejected by the lolday cutover-1 backend.
+- No on-disk model carry-over: previously trained Lightning checkpoints / `model.joblib` artefacts are not portable across the schema bump because the label encoding now goes through `classes.index(label)` (older artefacts depended on a hard-coded order). Re-train baselines after upgrading.
+
+### Migration
+
+For users embedding elfcnndet:
+1. Pin `elfcnndet>=4.0.0` and `maldet[lightning,mlflow]>=2.0,<3.0`.
+2. If you fork `maldet.toml`, declare `positive_class` explicitly — the platform refuses to build detectors that omit it under `schema_version = 2`.
+3. Re-train any saved baselines; old checkpoints are not compatible.
+
 ## [3.0.0] - 2026-04-27
 
 ### BREAKING
