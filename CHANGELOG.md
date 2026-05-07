@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.0.1] - 2026-05-07
+
+### Fixed
+
+- Pulls `maldet 2.0.1`, which pins the active MLflow run to the platform-injected `cfg.mlflow.run_id`. Multi-GPU (DDP) train no longer leaks a second untagged "learned-stag-591"-style auto-named run alongside the platform's tagged run.
+
+### Migration
+
+No detector code changes. Rebuild from this tag (or any tag pinned `maldet>=2.0.1,<3`) so the train pod's installed maldet picks up the orphan-run fix.
+
 ## [4.0.0] - 2026-05-02
 
 ### BREAKING
