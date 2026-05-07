@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "elfcnndet"
-version = "4.0.0"
+version = "4.0.1"
 description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 2.0 framework"
 readme = "README.md"
 license = { text = "MIT" }
