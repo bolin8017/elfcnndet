@@ -4,7 +4,7 @@
 
 ### Removed
 
-- `EvaluateConfig.threshold` field. The field was declared with default 0.5, range [0.0, 1.0], but `maldet.evaluators.binary.BinaryClassification.evaluate()` never used it — `model.predict()` was called directly (= argmax over softmax output). The schema-declared knob silently had no effect on metrics. Removed to match the actual evaluator behavior. If a non-0.5 operating point is needed in the future, bake it into the trained model artifact (see scikit-learn `TunedThresholdClassifierCV` or implement a threshold-aware wrapper around `predict_proba` for Lightning) or implement a custom `Evaluator` protocol implementation in this repo.
+- `EvaluateConfig.threshold` field. The field was declared with default 0.5, range [0.0, 1.0], but `maldet.evaluators.binary.BinaryClassification.evaluate()` never used it — `model.predict()` was called directly (= argmax over softmax output). The schema-declared knob silently had no effect on metrics. Removed to match the actual evaluator behavior. If a non-0.5 operating point is needed in the future: bake it into the trained model artifact (for sklearn-style detectors, see `TunedThresholdClassifierCV`; for the Lightning case here, wrap `predict_proba` with a threshold-aware decision rule), or implement a custom `Evaluator` protocol implementation in this repo.
 
 ### Migration
 
