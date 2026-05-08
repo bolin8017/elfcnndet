@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.1.0] - 2026-05-08
+
+### Removed
+
+- `EvaluateConfig.threshold` field. The field was declared with default 0.5, range [0.0, 1.0], but `maldet.evaluators.binary.BinaryClassification.evaluate()` never used it — `model.predict()` was called directly (= argmax over softmax output). The schema-declared knob silently had no effect on metrics. Removed to match the actual evaluator behavior. If a non-0.5 operating point is needed in the future: bake it into the trained model artifact (for sklearn-style detectors, see `TunedThresholdClassifierCV`; for the Lightning case here, wrap `predict_proba` with a threshold-aware decision rule), or implement a custom `Evaluator` protocol implementation in this repo.
+
+### Migration
+
+- New training jobs against this version produce model artifacts that work on lolday with no behavioral change.
+- Lolday uses 4.0.0 for any model trained before this bump (manifest lookup is by `detector_version_id`); the legacy schema still surfaces the inert `threshold` field for evaluations on those models. Lolday spec `2026-05-08-submit-job-priority-hparams-threshold-design.md` §6.4 specifies a 2-week grace period before retiring 4.0.0.
+
 ## [4.0.1] - 2026-05-07
 
 ### Fixed
