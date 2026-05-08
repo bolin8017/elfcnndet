@@ -13,6 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def test_manifest_loads_via_maldet() -> None:
     """The manifest detector version must match the package version (single source of truth)."""
     import tomllib
+
     pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text())
     expected_version = pyproject["project"]["version"]
 
@@ -99,7 +100,13 @@ def test_introspect_schema_for_evaluate_config_has_no_properties(tmp_path: Path)
     runner = CliRunner()
     result = runner.invoke(
         app,
-        ["introspect-schema", "--config-class", "elfcnndet.configs:EvaluateConfig", "--out", str(out)],
+        [
+            "introspect-schema",
+            "--config-class",
+            "elfcnndet.configs:EvaluateConfig",
+            "--out",
+            str(out),
+        ],
     )
     assert result.exit_code == 0, (result.stdout, result.stderr)
     schema = json.loads(out.read_text())
