@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def test_manifest_loads_via_maldet() -> None:
     m = load_manifest(REPO_ROOT / "maldet.toml")
     assert m.detector.name == "elfcnndet"
-    assert m.detector.version == "4.0.0"
+    assert m.detector.version == "4.1.0"
     assert m.detector.framework == "lightning"
 
 
