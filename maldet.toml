@@ -1,8 +1,8 @@
 [detector]
 name = "elfcnndet"
-version = "4.1.0"
+version = "4.2.0"
 framework = "lightning"
-description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 2.0 framework"
+description = "1D-CNN ELF malware detector with PyTorch Lightning DDP — reference template for the lolday platform on the maldet 2.2 framework"
 
 [input]
 binary_format = "elf"
@@ -35,7 +35,7 @@ predictions = { path = "predictions.csv", type = "file" }
 
 [compat]
 min_python = "3.12"
-min_maldet = "2.0"
+min_maldet = "2.2"
 schema_version = 2
 
 [stages.train]

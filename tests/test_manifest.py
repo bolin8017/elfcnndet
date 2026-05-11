@@ -53,7 +53,7 @@ def test_manifest_io_contract() -> None:
     assert m.input.required_sections == [".text"]
     assert m.output.classes == ["Benign", "Malware"]
     assert m.output.positive_class == "Malware"
-    assert m.compat.min_maldet == "2.0"
+    assert m.compat.min_maldet == "2.2"
     assert m.compat.schema_version == 2
 
 
